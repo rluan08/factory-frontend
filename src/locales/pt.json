@@ -1,0 +1,33 @@
+{
+  "header": { "title": "Gerenciador de Fábrica", "subtitle": "Controle de Produção e Otimização" },
+  "inventory": {
+    "title": "Estoque de Matérias-Primas",
+    "namePlaceholder": "Ex: Madeira",
+    "qtyPlaceholder": "Qtd",
+    "btnAdd": "Adicionar"
+  },
+  "product": {
+    "title": "Novo Produto",
+    "nameLabel": "Nome do Produto",
+    "priceLabel": "Preço de Venda",
+    "recipeLabel": "Composição da Receita:",
+    "selectMaterial": "Selecione o Material",
+    "btnSave": "Salvar Produto no Catálogo"
+  },
+  "catalog": {
+    "title": "Catálogo de Produtos",
+    "colId": "ID",
+    "colName": "Produto",
+    "colComp": "Composição",
+    "colPrice": "Preço Unit.",
+    "colActions": "Ações",
+    "btnDelete": "Excluir"
+  },
+  "optimize": {
+    "title": "Ordem de Produção Otimizada",
+    "subtitle": "O algoritmo prioriza produtos com melhor retorno financeiro.",
+    "btnCalculate": "Calcular Melhor Lucro",
+    "totalProfit": "LUCRO TOTAL ESTIMADO",
+    "units": "unidades"
+  }
+}

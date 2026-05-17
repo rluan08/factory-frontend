@@ -1,0 +1,33 @@
+{
+  "header": { "title": "Factory Manager", "subtitle": "Production Control and Optimization" },
+  "inventory": {
+    "title": "Raw Materials Inventory",
+    "namePlaceholder": "Ex: Wood",
+    "qtyPlaceholder": "Qty",
+    "btnAdd": "Add"
+  },
+  "product": {
+    "title": "New Product",
+    "nameLabel": "Product Name",
+    "priceLabel": "Selling Price",
+    "recipeLabel": "Recipe Composition:",
+    "selectMaterial": "Select Material",
+    "btnSave": "Save Product to Catalog"
+  },
+  "catalog": {
+    "title": "Product Catalog",
+    "colId": "ID",
+    "colName": "Product",
+    "colComp": "Composition",
+    "colPrice": "Unit Price",
+    "colActions": "Actions",
+    "btnDelete": "Delete"
+  },
+  "optimize": {
+    "title": "Optimized Production Order",
+    "subtitle": "The algorithm prioritizes products with better financial return.",
+    "btnCalculate": "Calculate Best Profit",
+    "totalProfit": "ESTIMATED TOTAL PROFIT",
+    "units": "units"
+  }
+}
