@@ -168,7 +168,10 @@ const fetchData = async () => {
     ]);
     rawMaterials.value = resRM.data;
     products.value = resP.data;
-  } catch (e) { console.error("Erro ao carregar dados", e); }
+  } catch (e) {
+    console.error("Erro ao carregar dados", e);
+    alert("❌ Erro ao conectar com o servidor. Verifique se o backend está online.");
+  }
 };
 
 const getRMName = (id) => {
@@ -186,10 +189,25 @@ const calculateTotalProfit = () => {
 };
 
 const addRawMaterial = async () => {
-  if (!newRM.value.name) return;
-  await api.post('/raw-materials', newRM.value);
-  newRM.value = { name: '', quantity: 0 };
-  fetchData();
+  if (!newRM.value.name || newRM.value.name.trim() === '') {
+    alert("⚠️ Informe o nome do material!");
+    return;
+  }
+  if (newRM.value.quantity === null || newRM.value.quantity < 0) {
+    alert("⚠️ Informe uma quantidade válida!");
+    return;
+  }
+  try {
+    await api.post('/raw-materials', {
+      name: newRM.value.name.trim(),
+      quantity: Number(newRM.value.quantity)
+    });
+    newRM.value = { name: '', quantity: 0 };
+    fetchData();
+  } catch (e) {
+    console.error("Erro ao adicionar material", e);
+    alert("❌ Erro ao adicionar material. Tente novamente.");
+  }
 };
 
 const deleteRM = async (id) => {
@@ -197,7 +215,9 @@ const deleteRM = async (id) => {
   try {
     await api.delete(`/raw-materials/${id}`);
     fetchData();
-  } catch (e) { alert("Erro: Material em uso por um produto."); }
+  } catch (e) {
+    alert("Erro: Material em uso por um produto.");
+  }
 };
 
 const editRM = async (rm) => {
@@ -209,8 +229,10 @@ const editRM = async (rm) => {
 };
 
 const addToRecipe = () => {
-  if (tempRMId.value && tempQty.value) {
-    currentRecipe.value[tempRMId.value] = tempQty.value;
+  if (tempRMId.value !== null && tempQty.value) {
+    // Garante que a chave é sempre número (Long no Java)
+    const idAsNumber = Number(tempRMId.value);
+    currentRecipe.value[idAsNumber] = Number(tempQty.value);
     tempRMId.value = null;
     tempQty.value = null;
   }
@@ -219,22 +241,37 @@ const addToRecipe = () => {
 const removeFromRecipe = (id) => delete currentRecipe.value[id];
 
 const addProduct = async () => {
-  if (!newProduct.value.name || Object.keys(currentRecipe.value).length === 0) {
-    alert("Preencha o nome e adicione materiais à receita!");
+  if (!newProduct.value.name || newProduct.value.name.trim() === '') {
+    alert("⚠️ Informe o nome do produto!");
     return;
   }
+  if (Object.keys(currentRecipe.value).length === 0) {
+    alert("⚠️ Adicione ao menos um material à receita!");
+    return;
+  }
+
+  // Monta o composition garantindo que todas as chaves são números
+  const compositionWithNumberKeys = {};
+  Object.entries(currentRecipe.value).forEach(([id, qty]) => {
+    compositionWithNumberKeys[Number(id)] = Number(qty);
+  });
+
   const payload = {
-    name: newProduct.value.name,
-    price: newProduct.value.price,
-    composition: currentRecipe.value
+    name: newProduct.value.name.trim(),
+    price: Number(newProduct.value.price),
+    composition: compositionWithNumberKeys
   };
+
   try {
     await api.post('/products', payload);
     newProduct.value = { name: '', price: 0 };
     currentRecipe.value = {};
     fetchData();
     alert("✅ Produto salvo com sucesso!");
-  } catch (e) { alert("❌ Erro ao salvar."); }
+  } catch (e) {
+    console.error("Erro ao salvar produto", e);
+    alert("❌ Erro ao salvar produto. Verifique se todos os materiais existem.");
+  }
 };
 
 const deleteProduct = async (id) => {
@@ -245,8 +282,13 @@ const deleteProduct = async (id) => {
 };
 
 const getProductionSuggest = async () => {
-  const res = await api.get('/api/production/suggest');
-  suggestion.value = res.data;
+  try {
+    const res = await api.get('/api/production/suggest');
+    suggestion.value = res.data;
+  } catch (e) {
+    console.error("Erro ao buscar sugestão", e);
+    alert("❌ Erro ao calcular sugestão de produção.");
+  }
 };
 
 onMounted(fetchData);
